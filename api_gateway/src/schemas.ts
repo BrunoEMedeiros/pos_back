@@ -16,7 +16,8 @@
             max: 1000
         },
         userId: {
-            required: 'Autor é obrigatório!' 
+            required: 'Autor é obrigatório!',
+            type: 'number'
         }
     }
 
@@ -25,7 +26,8 @@
             required: 'like/deslike é obrigatório!'
         } ,
         userId: {
-            required: 'usuario é obrigatório!'
+            required: 'usuario é obrigatório!',
+            type: 'number'
         } 
     }
 
@@ -36,10 +38,12 @@
             max: 255
         },
         userId :{
-            required: 'código do usuario é obrigatório!'
+            required: 'código do usuario é obrigatório!',
+            type: 'number'
         },
         newId: {
-            required: 'codigo da noticia é obrigatório!'
+            required: 'codigo da noticia é obrigatório!',
+            type: 'number'
         }
     }
 

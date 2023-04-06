@@ -33,6 +33,13 @@ export function validate(type:string, schema: any){
             if(campoValidacao.max && (body[campos].length > campoValidacao.max)){
                 errors.push(`Campo ${campos} - O tamanho maximo é ${campoValidacao.min}`)
             }
+
+            if(campoValidacao.type == 'number'){
+                const codigo = parseInt(body[campos]);
+                if(Number.isNaN(codigo) || !codigo || codigo == null || codigo == undefined){
+                    errors.push(`Campo ${campos} - somente numeros são permitidos!`);
+                }
+            }
         })}
         
         if(errors.length > 0)
