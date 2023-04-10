@@ -13,7 +13,7 @@ services:
     networks:
       rede1:
         ipv4_address: 172.16.238.3
-    volumes: 
+    volumes:
       - db:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'pg_isready -U root -d database'"]
@@ -31,7 +31,7 @@ services:
     networks:
       rede1:
         ipv4_address: 172.16.238.6
-    volumes: 
+    volumes:
       - cache:/data
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
@@ -66,7 +66,18 @@ services:
         condition: service_started
       cache:
         condition: service_started
-      
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      rede1:
+        ipv4_address: 172.16.238.10
+    volumes:
+      - /docker_conf/rabbitmq/data/:/var/lib/rabbitmq/
+
 networks:
   rede1:
     driver: bridge
