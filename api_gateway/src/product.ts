@@ -32,10 +32,7 @@ export class Product{
         await this.channel.assertQueue(type);
         //Send a message to the queue
 
-        await this.channel.sendToQueue(type, Buffer.from(JSON.stringify({
-            key: obj.key,
-            payload: obj.payload
-        })));
+        await this.channel.sendToQueue(type, Buffer.from(JSON.stringify(obj.payload)));
         
         console.log("Sending message...");
         return
