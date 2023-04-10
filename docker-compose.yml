@@ -55,7 +55,7 @@ services:
       - db
   api:
     container_name: api_gateway
-    image: bruno/api_gateway
+    image: d3adsec/api_gateway
     ports:
       - "8000:8000"
     networks:

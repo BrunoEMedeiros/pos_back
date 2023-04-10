@@ -16,10 +16,10 @@ export class Product{
 
     async createConnect(){
       try {        
-            this.connection = await client.connect("amqp://guest:guest@172.26.69.30:5672");
-            this.channel = await this.connection.createChannel()
+            this.connection = await client.connect("amqp://guest:guest@172.16.238.6:5672");
+            this.channel = await this.connection.createChannel();
         } catch (error) {
-            console.log("Error to connect rabbitmq!: ", error)
+            console.log("Error to connect rabbitmq!: ", error);
         }
     }
     async sendMessage(type: string, obj: IMessage){

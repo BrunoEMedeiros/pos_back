@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = "postgresql://root:root@172.16.238.3:5432/database?schema=public"
+}
+
+enum NewsReaction {
+  NEUTRAL
+  LIKED
+  DISLIKED
+}
+
+enum Role {
+  ADMINISTRATOR
+  AUTHOR
+  READER
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(70)
+  email String @unique @db.VarChar(100)
+  nickname String? @db.VarChar(30)
+  birthday DateTime? @db.Date
+  password String
+  role Role
+  activated Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  news News[]
+  reaction Reaction[]
+  comment Comment[]
+}
+
+model News {
+  id Int @id @default(autoincrement())
+  title String @db.VarChar(50)
+  subtitle String @db.VarChar(100)
+  text String @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId Int
+  User User @relation(fields: [userId], references: [id])
+
+  reaction Reaction[]
+  comment Comment[]
+}
+
+model Reaction {
+  id Int @id @default(autoincrement())
+  reaction NewsReaction
+
+  userId Int
+  User User @relation(fields: [userId], references: [id])
+
+  newId Int
+  News News @relation(fields: [newId], references: [id])
+}
+
+model Comment {
+  id Int @id @default(autoincrement())
+  comment String @db.Text
+
+  userID Int
+  User User @relation(fields: [userID], references: [id])
+
+  newId Int
+  News News @relation(fields: [newId], references: [id])
+}
