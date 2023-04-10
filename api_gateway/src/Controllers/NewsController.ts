@@ -10,13 +10,10 @@ export class NewsController{
             const {   
                 title ,
                 subtitle , 
-                content
+                content,
+                userId
             } = req.body;
-    
-            let userId = req.body;
-    
-            userId = parseFloat(userId);
-    
+
             const message: IMessage = {
                     key: "news",
                     payload: {
@@ -27,6 +24,8 @@ export class NewsController{
                     }
             }
     
+            console.log(message);
+            
             await productMessage.sendMessage('news', message);
     
             return res.status(200).json("Sending message...");
