@@ -25,6 +25,7 @@ queues:
 
 router.post("/news", validate("post", schemaNews), newController.createNews); //ms news
 router.put("/news/:id", validate("put", schemaNews), newController.updateNews); //ms update news
+router.put("/publish/:id", validate("publish", schemaNews), newController.publishNews) //ms publish news
 router.delete("/news/:id", validate("delete", schemaNews), newController.deleteNews); //ms delete news
 router.post("/reactions/:id", validate("put", schemaReactions),  newController.reactionNews); //ms reactions
 router.post("/comments", validate("post", schemaComments), newController.commentNews); //ms comments

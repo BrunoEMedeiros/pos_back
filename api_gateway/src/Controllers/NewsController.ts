@@ -56,7 +56,6 @@ export class NewsController{
                         id,
                         title ,
                         subtitle ,
-                        author,
                         content,
                         userId
                     }
@@ -64,6 +63,24 @@ export class NewsController{
     
             await productMessage.sendMessage('newsUpdate', message);
     
+            return res.status(200).json("Sending message...");
+        } catch (error) {
+            console.log("Error route send message!");
+            return res.status(500).json("Error to send message...");
+        }
+    }
+
+    public async publishNews(req: Request, res: Response){
+        try {
+            const{ id } = req.params;
+            const message: IMessage = {
+                key: "newsPublish",
+                payload: id
+                
+            }
+
+            await productMessage.sendMessage('newsPublish', message);
+
             return res.status(200).json("Sending message...");
         } catch (error) {
             console.log("Error route send message!");

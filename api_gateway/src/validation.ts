@@ -7,7 +7,7 @@ export function validate(type:string, schema: any){
         const errors: string[] = [];
         const { id } = req.params;
 
-        if(type == "put" || type == "delete" || type == "password"){
+        if(type == "put" || type == "delete" || type == "password" || type == "publish"){
             try {
                 const codigo = parseInt(id);
                 if(Number.isNaN(codigo)){
