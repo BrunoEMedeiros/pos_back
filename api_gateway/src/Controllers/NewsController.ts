@@ -116,7 +116,7 @@ export class NewsController{
             const { id } = req.params;
     
             const message: IMessage = {
-                key: "reactions",
+                key: "reactionsUpdate",
                 payload: {
                     reaction ,
                     userId ,
@@ -124,7 +124,7 @@ export class NewsController{
                 }
         }
 
-        await productMessage.sendMessage('reactions', message);
+        await productMessage.sendMessage('reactionsUpdate', message);
 
         return res.status(200).json("Sending message...");
 
