@@ -116,6 +116,34 @@ export class NewsController{
             const { id } = req.params;
     
             const message: IMessage = {
+                key: "reactions",
+                payload: {
+                    reaction ,
+                    userId ,
+                    id
+                }
+        }
+
+        await productMessage.sendMessage('reactions', message);
+
+        return res.status(200).json("Sending message...");
+
+        } catch (error) {
+            console.log("Error route send message!");
+            return res.status(500).json("Error to send message...");
+        }
+    }
+
+    public async reactionUpdate(req: Request, res: Response){
+        try {
+            const {   
+                reaction
+            } = req.body;
+
+            const {userId } = req.body;
+            const { id } = req.params;
+    
+            const message: IMessage = {
                 key: "reactionsUpdate",
                 payload: {
                     reaction ,
@@ -133,6 +161,7 @@ export class NewsController{
             return res.status(500).json("Error to send message...");
         }
     }
+
 
     public async commentNews(req: Request, res: Response){
         try {
