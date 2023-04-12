@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { IMessage } from "../product";
 import { Product } from "../product";
+import { getRedis, redisClient } from "../redis";
 
 const productMessage: Product = new Product();
     export class UserController{
@@ -13,8 +14,13 @@ const productMessage: Product = new Product();
                     birthday,
                     password
                 } = req.body;
-        
-                const message: IMessage = {
+
+                const validacao = await getRedis('validation');
+                if(validacao != null){
+                    redisClient.del('validation');
+                    return res.status(400).json("Email ja em uso!"); 
+                }else{
+                    const message: IMessage = {
                         key: "readers",
                         payload: {
                             name,
@@ -24,12 +30,11 @@ const productMessage: Product = new Product();
                             password,
                             role: 'READER'
                         }
-                }
-        
+                    }
+                    
                 await productMessage.sendMessage('readers', message);
-        
                 return res.status(200).json("Sending message...");
-        
+                }
                 } catch (error) {
                         console.log("Error route send message!");
                         return res.status(500).json("Error to send message...");

@@ -36,7 +36,6 @@ router.put("/reactions/:id", validate("put", schemaReactions), newController.rea
 router.post("/comments", validate("post", schemaComments), newController.commentNews); //ms comments
 router.put("/comments/:id", validate("put", schemaComments), newController.updateComment); // ms comments delete
 router.delete("/comments/:id", validate("delete", schemaComments), newController.deleteComment);
-
 router.post("/readers", validate("post",schemaUsers), userController.createReader); //ms users
 router.post("/authors", validate("post",schemaUsers), userController.createAuthor); //ms users
 router.post("/admin", validate("post",schemaUsers), userController.createAdmin); //ms users
