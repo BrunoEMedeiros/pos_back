@@ -15,7 +15,7 @@ const productMessage: Product = new Product();
                 } = req.body;
         
                 const message: IMessage = {
-                        key: "users",
+                        key: "readers",
                         payload: {
                             name,
                             email,
@@ -26,7 +26,7 @@ const productMessage: Product = new Product();
                         }
                 }
         
-                await productMessage.sendMessage('users', message);
+                await productMessage.sendMessage('readers', message);
         
                 return res.status(200).json("Sending message...");
         
@@ -46,7 +46,7 @@ const productMessage: Product = new Product();
                 } = req.body;
         
                 const message: IMessage = {
-                        key: "users",
+                        key: "authors",
                         payload: {
                             name,
                             email,
@@ -57,7 +57,7 @@ const productMessage: Product = new Product();
                         }
                 }
         
-                await productMessage.sendMessage('users', message);
+                await productMessage.sendMessage('authors', message);
         
                 return res.status(200).json("Sending message...");
         
@@ -77,7 +77,7 @@ const productMessage: Product = new Product();
                 } = req.body;
         
                 const message: IMessage = {
-                        key: "users",
+                        key: "admin",
                         payload: {
                             name,
                             email,
@@ -88,7 +88,7 @@ const productMessage: Product = new Product();
                         }
                 }
         
-                await productMessage.sendMessage('users', message);
+                await productMessage.sendMessage('admin', message);
         
                 return res.status(200).json("Sending message...");
             } catch (error) {
@@ -104,7 +104,6 @@ const productMessage: Product = new Product();
 
                 const {   
                     name,
-                    email,
                     nickname,
                     birthday,
                     password
@@ -115,7 +114,6 @@ const productMessage: Product = new Product();
                         payload: {
                             id,
                             name,
-                            email,
                             nickname,
                             birthday,
                             password

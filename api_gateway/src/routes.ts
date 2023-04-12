@@ -19,7 +19,9 @@ queues:
     comments
     commentsUpdate
     commentDelete
-    users
+    readers
+    authors
+    admin
     usersUpdate
     usersBlock
     changePassword
