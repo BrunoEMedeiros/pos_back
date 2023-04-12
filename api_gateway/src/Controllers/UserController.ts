@@ -15,25 +15,23 @@ const productMessage: Product = new Product();
                     password
                 } = req.body;
 
+                const message: IMessage = {
+                    key: "readers",
+                    payload: {
+                        name,
+                        email,
+                        nickname,
+                        birthday,
+                        password,
+                        role: 'READER'
+                    }
+                }
+                await productMessage.sendMessage('readers', message);
                 const validacao = await getRedis('validation');
                 if(validacao != null){
-                    redisClient.del('validation');
                     return res.status(400).json("Email ja em uso!"); 
                 }else{
-                    const message: IMessage = {
-                        key: "readers",
-                        payload: {
-                            name,
-                            email,
-                            nickname,
-                            birthday,
-                            password,
-                            role: 'READER'
-                        }
-                    }
-                    
-                await productMessage.sendMessage('readers', message);
-                return res.status(200).json("Sending message...");
+                    return res.status(200).json("cadastrado com sucesso");
                 }
                 } catch (error) {
                         console.log("Error route send message!");
