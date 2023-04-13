@@ -4,6 +4,7 @@ import { Product } from "../product";
 import { getRedis, redisClient } from "../redis";
 
 const productMessage: Product = new Product();
+
     export class UserController{
         public async createReader(req: Request, res: Response){
             try {
@@ -26,13 +27,20 @@ const productMessage: Product = new Product();
                         role: 'READER'
                     }
                 }
-                await productMessage.sendMessage('readers', message);
-                const validacao = await getRedis('validation');
-                if(validacao != null){
-                    return res.status(400).json("Email ja em uso!"); 
-                }else{
-                    return res.status(200).json("cadastrado com sucesso");
+                
+                const emails = await getRedis('emails');
+
+                if(emails){
+                    const listaE = JSON.parse(emails);
+                    let teste = listaE.find((test: any) => test === email);
+                    if(teste){
+                        return res.status(400).json("email ja em uso");
+                    }
                 }
+                //console.log(lista);
+                await productMessage.sendMessage('readers', message);
+                return res.status(200).json("cadastrado com sucesso");
+                
                 } catch (error) {
                         console.log("Error route send message!");
                         return res.status(500).json("Error to send message...");
