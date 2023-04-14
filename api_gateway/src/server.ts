@@ -11,4 +11,5 @@ app.use(router);
 app.listen(8000, async ()=>{
     console.log("api_gateway running on 8000 port");
     await validation.validarEmails();
+    await validation.validarAtivos();
 });

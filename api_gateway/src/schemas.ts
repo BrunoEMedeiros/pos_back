@@ -72,3 +72,19 @@
             max: 10
         }
     }
+
+    export const schemaUsersUpdate = {
+        name: {
+            required: 'nome é obrigatório!',
+            min: 1,
+            max: 100
+        },
+        nickname:{
+            required: 'nickname é obrigatório!',
+            min: 1,
+            max: 100
+        },
+        birthday:{
+            required: 'aniversario é obrigatório!',
+        }
+    }

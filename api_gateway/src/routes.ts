@@ -2,7 +2,7 @@ import { Router } from "express";
 import { NewsController } from "./Controllers/NewsController";
 import { UserController } from "./Controllers/UserController";
 import { validate } from "./validation";
-import { schemaComments, schemaNews, schemaReactions, schemaUsers } from "./schemas";
+import { schemaComments, schemaNews, schemaReactions, schemaUsers, schemaUsersUpdate } from "./schemas";
 
 const router: Router = Router()
 const newController: NewsController = new NewsController();
@@ -22,6 +22,7 @@ queues:
     readers
     authors
     admin
+    activate
     usersUpdate
     usersBlock
     changePassword
@@ -39,7 +40,10 @@ router.delete("/comments/:id", validate("delete", schemaComments), newController
 router.post("/readers", validate("post",schemaUsers), userController.createReader); //ms users
 router.post("/authors", validate("post",schemaUsers), userController.createAuthor); //ms users
 router.post("/admin", validate("post",schemaUsers), userController.createAdmin); //ms users
-router.put("/users/:id", validate("put",schemaUsers), userController.updateUser); //ms update users
+router.put("/activate/:id", validate("activate", schemaUsers), userController.activateUser); //ms ativate user
+//router.put("/email/:id", validate("delete", schemaUsers), userController);
+router.put("/users/:id", validate("put", schemaUsersUpdate), userController.updateUser); //ms update users
+
 router.delete("/users/:id", validate("delete",schemaUsers), userController.blockUser); //ms block users
 router.put("/password/:id", validate("password",schemaUsers), userController.changePassword); //ms change password
 
