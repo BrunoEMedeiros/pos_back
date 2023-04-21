@@ -1,12 +1,18 @@
 import { Request, Response } from "express";
 import { IMessage } from "../product";
 import { Product } from "../product";
+import { getRedis } from "../redis";
+import { v4 as uuidv4 } from 'uuid';
 
 const productMessage: Product = new Product();
+let listAutores: object[] = [];
+let listAutorizados: object[] = [];
 
 export class NewsController{
+    
     public async createNews(req: Request, res: Response){
         try {
+            const queue = uuidv4();
             const {   
                 title ,
                 subtitle , 
@@ -15,7 +21,7 @@ export class NewsController{
             } = req.body;
 
             const message: IMessage = {
-                    key: "news",
+                    key: queue,
                     payload: {
                         title ,
                         subtitle,
@@ -23,21 +29,21 @@ export class NewsController{
                         userId
                     }
             }
-    
-            console.log(message);
             
-            await productMessage.sendMessage('news', message);
-    
-            return res.status(200).json("Sending message...");
-    
+            const validation = await productMessage.sendMessage('news', message);
+            if(validation == 0){
+                res.status(400).json('Este usuario não pode realizar esta operação');
+            }else
+                res.status(200).json('Cadastrado com sucesso');
             } catch (error) {
-                    console.log("Error route send message!");
-                    return res.status(500).json("Error to send message...");
+                console.log("Error route send message!");
+                return res.status(500).json("Error to send message...");
             }
     }
 
     public async updateNews(req: Request, res: Response){
         try {
+            const queue = uuidv4();
             const{ id } = req.params;
             const {   
                 title ,
@@ -51,7 +57,7 @@ export class NewsController{
             author = parseFloat(author);
     
             const message: IMessage = {
-                    key: "newsUpdate",
+                    key: queue,
                     payload: {
                         id,
                         title ,
@@ -60,11 +66,14 @@ export class NewsController{
                         userId
                     }
             }
-    
-            await productMessage.sendMessage('newsUpdate', message);
-    
-            return res.status(200).json("Sending message...");
-        } catch (error) {
+
+            const validation = await productMessage.sendMessage('newsUpdate', message);
+            if(validation == 0){
+                res.status(400).json('Este usuario não pode realizar esta operação');
+            }else
+                res.status(200).json('Cadastrado com sucesso');
+
+        }catch (error) {
             console.log("Error route send message!");
             return res.status(500).json("Error to send message...");
         }
@@ -72,16 +81,20 @@ export class NewsController{
 
     public async publishNews(req: Request, res: Response){
         try {
+            const queue = uuidv4();
             const{ id } = req.params;
             const message: IMessage = {
-                key: "newsPublish",
+                key: queue,
                 payload: id
                 
             }
+            
+            const validation = await productMessage.sendMessage('newsPublish', message);
+            if(validation == 0){
+                res.status(400).json('Este usuario não pode realizar esta operação');
+            }else
+                res.status(200).json('Publicada com sucesso');
 
-            await productMessage.sendMessage('newsPublish', message);
-
-            return res.status(200).json("Sending message...");
         } catch (error) {
             console.log("Error route send message!");
             return res.status(500).json("Error to send message...");
@@ -90,16 +103,19 @@ export class NewsController{
 
     public async deleteNews(req: Request, res: Response) {
         try {
+            const queue = uuidv4();
             const{ id } = req.params;
             const message: IMessage = {
-                key: "newsDelete",
-                payload: id
-                
-        }
+                key: queue,
+                payload: id     
+            }
 
-        await productMessage.sendMessage('newsDelete', message);
+            const validation = await productMessage.sendMessage('newsDelete', message);
+            if(validation == 0){
+                res.status(400).json('Esta noticia não pode ser excluida!');
+            }else
+                res.status(200).json('Excluida com sucesso!');
 
-        return res.status(200).json("Sending message...");
         } catch (error) {
             console.log("Error route send message!");
             return res.status(500).json("Error to send message...");
@@ -108,15 +124,15 @@ export class NewsController{
 
     public async reactionNews(req: Request, res: Response){
         try {
+            const queue = uuidv4();
+            const { id } = req.params;
             const {   
-                reaction
+                reaction,
+                userId
             } = req.body;
 
-            const {userId } = req.body;
-            const { id } = req.params;
-    
             const message: IMessage = {
-                key: "reactions",
+                key: queue,
                 payload: {
                     reaction ,
                     userId ,
@@ -124,9 +140,11 @@ export class NewsController{
                 }
         }
 
-        await productMessage.sendMessage('reactions', message);
-
-        return res.status(200).json("Sending message...");
+        const validation = await productMessage.sendMessage('reactions', message);
+        if(validation == 0){
+            res.status(400).json('Este usuario não pode realizar esta operação');
+        }else
+            res.status(200).json('Reacted!');
 
         } catch (error) {
             console.log("Error route send message!");
@@ -136,15 +154,17 @@ export class NewsController{
 
     public async reactionUpdate(req: Request, res: Response){
         try {
+            const queue = uuidv4();
+            const { id } = req.params;
+
             const {   
-                reaction
+                reaction,
+                userId
             } = req.body;
 
-            const {userId } = req.body;
-            const { id } = req.params;
-    
+        
             const message: IMessage = {
-                key: "reactionsUpdate",
+                key: queue,
                 payload: {
                     reaction ,
                     userId ,
@@ -152,9 +172,11 @@ export class NewsController{
                 }
         }
 
-        await productMessage.sendMessage('reactionsUpdate', message);
-
-        return res.status(200).json("Sending message...");
+        const validation = await productMessage.sendMessage('reactionsUpdate', message);
+        if(validation == 0){
+            res.status(400).json('Este usuario não pode realizar esta operação');
+        }else
+            res.status(200).json('Reacted!');
 
         } catch (error) {
             console.log("Error route send message!");
@@ -162,9 +184,9 @@ export class NewsController{
         }
     }
 
-
     public async commentNews(req: Request, res: Response){
         try {
+            const queue = uuidv4();
             const {   
                 comment,
                 userId,
@@ -172,7 +194,7 @@ export class NewsController{
             } = req.body;
     
             const message: IMessage = {
-                key: "comments",
+                key: queue,
                 payload: {
                     comment ,
                     userId ,
@@ -180,9 +202,12 @@ export class NewsController{
                 }
         }
 
-        await productMessage.sendMessage('comments', message);
+        const validation = await productMessage.sendMessage('comments', message);
+        if(validation == 0){
+            res.status(400).json('Este usuario não pode realizar esta operação');
+        }else
+            res.status(200).json('Commented!');
 
-        return res.status(200).json("Sending message...");
         } catch (error) {
             console.log("Error route send message!");
             return res.status(500).json("Error to send message...");
@@ -191,6 +216,7 @@ export class NewsController{
 
     public async updateComment(req: Request, res: Response){
         try {
+            const queue = uuidv4();
             const {   
                 comment,
                 userId,
@@ -200,18 +226,21 @@ export class NewsController{
             const { id } = req.params;
     
             const message: IMessage = {
-                key: "commentsUpdate",
+                key: queue,
                 payload: {
                     id,
                     newId,
-                    comment ,
+                    comment,
                     userId
                 }
-        }
+            }
 
-        await productMessage.sendMessage('commentsUpdate', message);
+        const validation = await productMessage.sendMessage('commentsUpdate', message);
+        if(validation == 0){
+            res.status(400).json('Este usuario não pode realizar esta operação');
+        }else
+            res.status(200).json('Commented!');
 
-        return res.status(200).json("Sending message...");
         } catch (error) {
             console.log("Error route send message!");
             return res.status(500).json("Error to send message...");
@@ -220,15 +249,20 @@ export class NewsController{
 
     public async deleteComment(req: Request, res: Response){
         try {
+            const queue = uuidv4();
             const{ id } = req.params;
+
             const message: IMessage = {
-                key: "commentDelete",
-                payload: id
+                key: queue,
+                payload: {id}
                 }
 
-        await productMessage.sendMessage('commentDelete', message);
+            const validation = await productMessage.sendMessage('commentDelete', message);
+            if(validation == 0){
+                res.status(400).json('Este usuario não pode realizar esta operação');
+            }else
+                res.status(200).json('Comment deleted!');
 
-        return res.status(200).json("Sending message..."); 
         } catch (error) {
             console.log("Error route send message!");
             return res.status(500).json("Error to send message...");

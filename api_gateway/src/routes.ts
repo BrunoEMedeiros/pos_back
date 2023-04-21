@@ -32,11 +32,14 @@ router.post("/news", validate("post", schemaNews), newController.createNews); //
 router.put("/news/:id", validate("put", schemaNews), newController.updateNews); //ms update news
 router.put("/publish/:id", validate("publish", schemaNews), newController.publishNews) //ms publish news
 router.delete("/news/:id", validate("delete", schemaNews), newController.deleteNews); //ms delete news
+
 router.post("/reactions/:id", validate("put", schemaReactions),  newController.reactionNews); //ms reactions
 router.put("/reactions/:id", validate("put", schemaReactions), newController.reactionUpdate) //ms update reactions
+
 router.post("/comments", validate("post", schemaComments), newController.commentNews); //ms comments
 router.put("/comments/:id", validate("put", schemaComments), newController.updateComment); // ms comments delete
 router.delete("/comments/:id", validate("delete", schemaComments), newController.deleteComment);
+
 router.post("/readers", validate("post",schemaUsers), userController.createReader); //ms users
 router.post("/authors", validate("post",schemaUsers), userController.createAuthor); //ms users
 router.post("/admin", validate("post",schemaUsers), userController.createAdmin); //ms users
