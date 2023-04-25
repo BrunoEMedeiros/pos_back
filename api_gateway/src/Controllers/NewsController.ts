@@ -5,9 +5,6 @@ import { getRedis } from "../redis";
 import { v4 as uuidv4 } from 'uuid';
 
 const productMessage: Product = new Product();
-let listAutores: object[] = [];
-let listAutorizados: object[] = [];
-
 export class NewsController{
     
     public async createNews(req: Request, res: Response){
@@ -35,6 +32,7 @@ export class NewsController{
                 res.status(400).json('Este usuario não pode realizar esta operação');
             }else
                 res.status(200).json('Cadastrado com sucesso');
+
             } catch (error) {
                 console.log("Error route send message!");
                 return res.status(500).json("Error to send message...");
@@ -259,10 +257,129 @@ export class NewsController{
 
             const validation = await productMessage.sendMessage('commentDelete', message);
             if(validation == 0){
-                res.status(400).json('Este usuario não pode realizar esta operação');
+                return res.status(400).json('Este usuario não pode realizar esta operação');
             }else
-                res.status(200).json('Comment deleted!');
+                return res.status(200).json('Comment deleted!');
 
+        } catch (error) {
+            console.log("Error route send message!");
+            return res.status(500).json("Error to send message...");
+        }
+    }
+
+    public async allNews(req: Request, res: Response){
+        try {
+            const message: IMessage = {
+                key: 'newsAll',
+                payload: 0
+            }   
+
+            await getRedis('all_news').then(async (data)=>{  
+                if(data == null){
+                    await productMessage.sendMessage('newsAll', message);
+                }else{
+                    return res.status(200).json(JSON.parse(data));
+                }
+            });
+            
+        } catch (error) {
+            console.log("Error route send message!");
+            return res.status(500).json("Error to send message...");
+        }
+    }
+
+    public async newsDetails(req: Request, res: Response){
+        try {
+            const queue = uuidv4();
+            const { userId } = req.body;
+            const { id } = req.params;
+
+            const message: IMessage = {
+                key: queue,
+                payload: {
+                    id,
+                    userId
+                }
+            }   
+
+            const validation = await productMessage.sendMessage('newsDetails', message);
+            if(validation == 0){
+                res.status(400).json('Erro!');
+            }else{
+                const data: any = await getRedis(queue);
+                return res.status(200).json(JSON.parse(data));
+            }
+            
+        } catch (error) {
+            console.log("Error route send message!");
+            return res.status(500).json("Error to send message...");
+        }   
+    }
+
+    public async authorNews(req: Request, res: Response){
+        try {
+            const queue = uuidv4();
+            const { id } = req.params;
+
+            const message: IMessage = {
+                key: queue,
+                payload: id
+            }
+            
+            const validation = await productMessage.sendMessage('authorNews', message);
+            if(validation == 0){
+                res.status(400).json('Erro!');
+            }else{
+                const data: any = await getRedis(queue);
+                return res.status(200).json(JSON.parse(data));
+            }        
+            
+        } catch (error) {
+            console.log("Error route send message!");
+            return res.status(500).json("Error to send message...");
+        }
+    }
+
+    public async newsAdmin(req: Request, res: Response){
+        try {
+            const queue = uuidv4();
+            //console.log(queue);
+            const message: IMessage = {
+                key: queue,
+                payload: 0
+            }   
+
+            const validation = await productMessage.sendMessage('newsAllAdmin', message);
+            if(validation == 0){
+                res.status(400).json('Erro!');
+            }else{
+                const data: any = await getRedis(queue);
+                return res.status(200).json(JSON.parse(data));
+            }        
+
+        } catch (error) {
+            console.log("Error route send message!");
+            return res.status(500).json("Error to send message...");
+        }
+    }
+
+    public async newsByNick(req: Request, res: Response){
+        try {
+            const queue = uuidv4();
+            const { nick } = req.params;
+
+            const message: IMessage = {
+                key: queue,
+                payload: nick
+            }
+            
+            const validation = await productMessage.sendMessage('newsByNick', message);
+            if(validation == 0){
+                res.status(400).json('Erro!');
+            }else{
+                const data: any = await getRedis(queue);
+                return res.status(200).json(JSON.parse(data));
+            }        
         } catch (error) {
             console.log("Error route send message!");
             return res.status(500).json("Error to send message...");

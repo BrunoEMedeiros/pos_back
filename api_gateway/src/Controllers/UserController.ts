@@ -1,13 +1,15 @@
 import { Request, Response } from "express";
 import { IMessage } from "../product";
 import { Product } from "../product";
-import { getRedis, redisClient } from "../redis";
+import { v4 as uuidv4 } from 'uuid';
+import { getRedis } from "../redis";
 
 const productMessage: Product = new Product();
 
     export class UserController{
         public async createReader(req: Request, res: Response){
             try {
+                const queue = uuidv4();
                 const {   
                     name,
                     email,
@@ -17,7 +19,7 @@ const productMessage: Product = new Product();
                 } = req.body;
 
                 const message: IMessage = {
-                    key: "readers",
+                    key: queue,
                     payload: {
                         name,
                         email,
@@ -28,18 +30,11 @@ const productMessage: Product = new Product();
                     }
                 }
                 
-                const emails = await getRedis('emails_test');
-
-                if(emails){
-                    const listaE = JSON.parse(emails);
-                    let teste = listaE.find((test: any) => test === email);
-                    if(teste){
-                        return res.status(400).json("email ja em uso");
-                    }
-                }
-                //console.log(lista);
-                await productMessage.sendMessage('readers', message);
-                return res.status(200).json("cadastrado com sucesso");
+                const validation = await productMessage.sendMessage('readers', message);
+                if(validation == 0){
+                    res.status(400).json('Email ou nickname ja em uso !');
+                }else
+                    res.status(200).json('Cadastrado com sucesso');
                 
                 } catch (error) {
                         console.log("Error route send message!");
@@ -48,6 +43,7 @@ const productMessage: Product = new Product();
         }
         public async createAuthor(req: Request, res: Response){
             try {
+                const queue = uuidv4();
                 const {   
                     name,
                     email,
@@ -57,7 +53,7 @@ const productMessage: Product = new Product();
                 } = req.body;
         
                 const message: IMessage = {
-                        key: "authors",
+                        key: queue,
                         payload: {
                             name,
                             email,
@@ -67,19 +63,12 @@ const productMessage: Product = new Product();
                             role: 'AUTHOR'
                         }
                 }
-        
-                const emails = await getRedis('emails_test');
 
-                if(emails){
-                    const listaE = JSON.parse(emails);
-                    let teste = listaE.find((test: any) => test === email);
-                    if(teste){
-                        return res.status(400).json("email ja em uso");
-                    }
-                }
-                //console.log(lista);
-                await productMessage.sendMessage('readers', message);
-                return res.status(200).json("cadastrado com sucesso");
+                const validation = await productMessage.sendMessage('authors', message);
+                if(validation == 0){
+                    res.status(400).json('Email ou nickname ja em uso !');
+                }else
+                    res.status(200).json('Cadastrado com sucesso');
 
                 } catch (error) {
                         console.log("Error route send message!");
@@ -88,6 +77,7 @@ const productMessage: Product = new Product();
         }
         public async createAdmin(req: Request, res: Response){
             try {
+                const queue = uuidv4();
                 const {   
                     name,
                     email,
@@ -97,7 +87,7 @@ const productMessage: Product = new Product();
                 } = req.body;
         
                 const message: IMessage = {
-                        key: "admin",
+                        key: queue,
                         payload: {
                             name,
                             email,
@@ -108,45 +98,40 @@ const productMessage: Product = new Product();
                         }
                 }
         
-                const emails = await getRedis('emails_test');
-
-                if(emails){
-                    const listaE = JSON.parse(emails);
-                    let teste = listaE.find((test: any) => test === email);
-                    if(teste){
-                        return res.status(400).json("email ja em uso");
-                    }
-                }
-                //console.log(lista);
-                await productMessage.sendMessage('readers', message);
-                return res.status(200).json("cadastrado com sucesso");
+                const validation = await productMessage.sendMessage('admin', message);
+                if(validation == 0){
+                    res.status(400).json('Email ou nickname ja em uso !');
+                }else
+                    res.status(200).json('Cadastrado com sucesso');
 
             } catch (error) {
                 console.log("Error route send message!");
                 return res.status(500).json("Error to send message...");
             }
         }
-
         public async activateUser(req: Request, res: Response){
             try {
+                const queue = uuidv4();
                 const {id} = req.params;
                 const message: IMessage = {
-                    key: "activate",
+                    key: queue,
                     payload: id
             }
 
-            await productMessage.sendMessage('activate', message);
-            return res.status(200).json("Sending message...");
+            const validation = await productMessage.sendMessage('activate', message);
+                if(validation == 0){
+                    res.status(400).json('Email ja ativo!');
+                }else
+                    res.status(200).json('Ativado com sucesso');
 
             } catch (error) {
                 console.log("Error route send message!");
                 return res.status(500).json("Error to send message...");
             }
         }
-
         public async updateUser(req: Request, res: Response){
             try {
-                
+                const queue = uuidv4();
                 const {id} = req.params;
 
                 const {   
@@ -156,7 +141,7 @@ const productMessage: Product = new Product();
                 } = req.body;
         
                 const message: IMessage = {
-                        key: "usersUpdate",
+                        key: queue,
                         payload: {
                             id,
                             name,
@@ -164,79 +149,62 @@ const productMessage: Product = new Product();
                             birthday
                         }
                 }
-
-                const verificados = await getRedis('auth_users_test');
-
-                if(verificados){
-                    const listaA = JSON.parse(verificados);
-                    let teste = listaA.find((test: any) => test == id);
-                    if(!teste){
-                        return res.status(400).json("conta não verificada!");
-                    }
-                }
     
-                await productMessage.sendMessage('usersUpdate', message);
-                return res.status(200).json("Sending message...");
-            } catch (error) {
-                console.log("Error route send message!");
-                return res.status(500).json("Error to send message...");
-            }
-        }
-
-        public async changeEmail(req: Request, res: Response){
-            try {
-                const {id} = req.params;
-                const message: IMessage = {
-                    key: "changeEmail",
-                    payload: id
-            }
-
-            const verificados = await getRedis('auth_users_test');
-
-                if(verificados){
-                    const listaA = JSON.parse(verificados);
-                    let teste = listaA.find((test: any) => test == id);
-                    if(!teste){
-                        return res.status(400).json("conta não verificada!");
-                    }
-                }
-
-            await productMessage.sendMessage('changeEmail', message);
-            return res.status(200).json("Sending message...");
+                const validation = await productMessage.sendMessage('usersUpdate', message);
+                if(validation == 0){
+                    res.status(400).json('Nickname ja em uso!');
+                }else
+                    res.status(200).json('Atualizado com sucesso');
 
             } catch (error) {
                 console.log("Error route send message!");
                 return res.status(500).json("Error to send message...");
             }
         }
-
         public async blockUser(req: Request, res: Response){
             try {
+                const queue = uuidv4();
                 const {id} = req.params;
                 const message: IMessage = {
-                    key: "usersBlock",
+                    key: queue,
                     payload: id
             }
-    
-            const verificados = await getRedis('auth_users_test');
 
-                if(verificados){
-                    const listaA = JSON.parse(verificados);
-                    let teste = listaA.find((test: any) => test == id);
-                    if(!teste){
-                        return res.status(400).json("conta não verificada!");
-                    }
-                }
-            
-            await productMessage.sendMessage('usersBlock', message);
-            return res.status(200).json("Sending message...");
-            
+            const validation = await productMessage.sendMessage('usersBlock', message);
+            if(validation == 0){
+                res.status(400).json('Este usuario possui publicações, não é possivel excluir!');
+            }else
+                res.status(200).json('Bloqueado com sucesso!');
+
             } catch (error) {
                 console.log("Error route send message!");
                 return res.status(500).json("Error to send message...");
             }
         }
+        public async allAuthors(req: Request, res: Response){
+            try {
+                const queue = uuidv4();
+            //console.log(queue);
+                const message: IMessage = {
+                    key: queue,
+                    payload: 0
+                }   
 
+            const validation = await productMessage.sendMessage('authorDetails', message);
+            if(validation == 0){
+                res.status(400).json('Erro!');
+            }else{
+                const data: any = await getRedis(queue);
+                return res.status(200).json(JSON.parse(data));
+            }        
+                
+            } catch (error) {
+                console.log("Error route send message!");
+                return res.status(500).json("Error to send message...");  
+            }
+        }
+
+        /*
         public async changePassword(req: Request, res: Response){
             try {
                 const {id} = req.params;
@@ -263,4 +231,31 @@ const productMessage: Product = new Product();
                 return res.status(500).json("Error to send message...");
             }
         }
+        public async changeEmail(req: Request, res: Response){
+            try {
+                const {id} = req.params;
+                const message: IMessage = {
+                    key: "changeEmail",
+                    payload: id
+            }
+
+            const verificados = await getRedis('auth_users_test');
+
+                if(verificados){
+                    const listaA = JSON.parse(verificados);
+                    let teste = listaA.find((test: any) => test == id);
+                    if(!teste){
+                        return res.status(400).json("conta não verificada!");
+                    }
+                }
+
+            await productMessage.sendMessage('changeEmail', message);
+            return res.status(200).json("Sending message...");
+
+            } catch (error) {
+                console.log("Error route send message!");
+                return res.status(500).json("Error to send message...");
+            }
+        } 
+        */
     }
