@@ -65,7 +65,7 @@ services:
       db:
         condition: service_started
       cache:
-        condition: service_started
+        condition: service_healthy
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: 'rabbitmq'
