@@ -12,7 +12,7 @@ services:
       - "5432:5432"
     networks:
       rede1:
-        ipv4_address: 172.16.238.3
+        ipv4_address: 172.17.0.3
     volumes:
       - db:/var/lib/postgresql/data
     healthcheck:
@@ -30,7 +30,7 @@ services:
     command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
     networks:
       rede1:
-        ipv4_address: 172.16.238.6
+        ipv4_address: 172.17.0.6
     volumes:
       - cache:/data
     healthcheck:
@@ -50,7 +50,7 @@ services:
       - "5050:80"
     networks:
       rede1:
-        ipv4_address: 172.16.238.4
+        ipv4_address: 172.17.0.4
     depends_on:
       - db
   api:
@@ -60,7 +60,7 @@ services:
       - "8000:8000"
     networks:
       rede1:
-        ipv4_address: 172.16.238.5
+        ipv4_address: 172.17.0.5
     depends_on:
       db:
         condition: service_started
@@ -74,16 +74,9 @@ services:
       - "15672:15672"
     networks:
       rede1:
-        ipv4_address: 172.16.238.10
+        ipv4_address: 172.17.0.10
     volumes:
       - /docker_conf/rabbitmq/data/:/var/lib/rabbitmq/
-
-networks:
-  rede1:
-    driver: bridge
-    ipam:
-     config:
-       - subnet: 172.16.238.0/30
 
 volumes:
   db:
