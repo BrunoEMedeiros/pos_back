@@ -94,7 +94,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -105,7 +105,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -116,7 +116,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -127,7 +127,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -138,7 +138,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -149,7 +149,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -160,7 +160,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -171,7 +171,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -182,7 +182,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -193,7 +193,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -204,7 +204,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -215,7 +215,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -226,7 +226,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -237,7 +237,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -248,7 +248,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -259,7 +259,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -270,7 +270,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -281,7 +281,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
         
@@ -292,7 +292,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -303,7 +303,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
 
@@ -314,7 +314,7 @@ services:
       - rede1
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       cache:
         condition: service_healthy
         
