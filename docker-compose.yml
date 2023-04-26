@@ -127,7 +127,7 @@ services:
       - rede1
   ms_news_all:
     container_name: ms_news_all
-    image: d3adsec/ms_news_all]
+    image: d3adsec/ms_news_all
     networks:
       - rede1
   ms_news_author:
@@ -190,9 +190,17 @@ services:
     image: d3adsec/ms_user_update
     networks:
       - rede1
+networks:
+  rede1:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 172.16.238.0/16
 
 volumes:
   db:
     driver: local
   cache:
+    driver: local
+  data:
     driver: local
