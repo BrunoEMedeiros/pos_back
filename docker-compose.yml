@@ -77,6 +77,14 @@ services:
         ipv4_address: 172.16.238.10
     volumes:
       - /docker_conf/rabbitmq/data/:/var/lib/rabbitmq/
+  portainer:
+    image: portainer/portainer-ce:latest
+    ports:
+      - 9443:9443
+    volumes:
+      - data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
   ms_admin:
     container_name: ms_admin
     image: d3adsec/ms_admin
@@ -182,13 +190,6 @@ services:
     image: d3adsec/ms_user_update
     networks:
       - rede1
-
-networks:
-  rede1:
-    driver: bridge
-    ipam:
-     config:
-       - subnet: 172.16.238.0/16
 
 volumes:
   db:
