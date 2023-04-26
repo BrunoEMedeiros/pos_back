@@ -53,6 +53,7 @@ router.get("/author/:id", newController.authorNews); //todas as noticias de dete
 router.get("/admin", newController.newsAdmin); //todas as noticias -> admin
 router.get("/author", userController.allAuthors); //todos os autores e contador de noticias de cada um
 router.get("/by/:nick", newController.newsByNick); //all news by nickname
+router.post("/login", userController.login)
 /*
 router.put("/email/:id", validate("delete", schemaUsers), userController);
 router.put("/password/:id", validate("password",schemaUsers), userController.changePassword); //ms change password

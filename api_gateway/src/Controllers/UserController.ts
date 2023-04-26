@@ -203,6 +203,32 @@ const productMessage: Product = new Product();
                 return res.status(500).json("Error to send message...");  
             }
         }
+        public async login(req: Request, res: Response){
+            try {
+            
+            const queue = uuidv4();
+            const { nickname, password } = req.body;
+            //console.log(queue);
+                const message: IMessage = {
+                    key: queue,
+                    payload: {
+                        nickname, 
+                        password
+                    }
+                }   
+
+            const validation = await productMessage.sendMessage('login', message);
+            if(validation == 0){
+                res.status(400).json('login invalido');
+            }else{
+                res.status(200).json('Logado!')
+            }  
+
+            } catch (error) {
+                console.log("Error route send message!");
+                return res.status(500).json("Error to send message...");  
+            }
+        }
 
         /*
         public async changePassword(req: Request, res: Response){

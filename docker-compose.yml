@@ -97,6 +97,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_authors:
     container_name: ms_authors
@@ -108,6 +113,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_authors_all:
     container_name: ms_authors_all
@@ -119,6 +129,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_comments:
     container_name: ms_comments
@@ -130,6 +145,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_comments_delete:
     container_name: ms_comments_delete
@@ -141,6 +161,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_comments_update:
     container_name: ms_comments_update
@@ -152,6 +177,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_news:
     container_name: ms_news
@@ -163,6 +193,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_news_admin:
     container_name: ms_news_admin
@@ -174,6 +209,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_news_all:
     container_name: ms_news_all
@@ -185,6 +225,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_news_author:
     container_name: ms_news_author
@@ -196,6 +241,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_news_delete:
     container_name: ms_news_delete
@@ -207,6 +257,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_news_details:
     container_name: ms_news_details
@@ -218,6 +273,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_news_nickname:
     container_name: ms_news_nickname
@@ -229,6 +289,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_news_publish:
     container_name: ms_news_publish
@@ -240,6 +305,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_news_update:
     container_name: ms_news_update
@@ -251,6 +321,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_reactions:
     container_name: ms_reactions
@@ -262,6 +337,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_reactions_update:
     container_name: ms_reactions_update
@@ -273,6 +353,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_readers:
     container_name: ms_readers
@@ -284,6 +369,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
         
   ms_user_activate:
     container_name: ms_user_activate
@@ -295,6 +385,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_user_block:
     container_name: ms_user_block
@@ -306,6 +401,11 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
 
   ms_user_update:
     container_name: ms_user_update
@@ -317,6 +417,27 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
+
+  ms_login:
+    container_name: ms_login
+    image: d3adsec/ms_login
+    networks:
+      - rede1
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 50M
         
 networks:
   rede1:
