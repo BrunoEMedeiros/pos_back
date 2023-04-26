@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = "postgresql://root:root@172.16.238.3:5432/database?schema=public"
+  url = "postgresql://root:root@node135344-postgrad-backend.jelastic.saveincloud.net:5432/database?schema=public"
 }
 
 enum NewsReaction {
