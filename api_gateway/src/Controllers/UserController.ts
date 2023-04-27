@@ -3,6 +3,7 @@ import { IMessage } from "../product";
 import { Product } from "../product";
 import { v4 as uuidv4 } from 'uuid';
 import { DatabaseModel } from '../DatabaseModel';
+import bcrypt from 'bcrypt';
 const banco = new DatabaseModel().pool;
 
 const productMessage: Product = new Product();
@@ -10,7 +11,7 @@ const productMessage: Product = new Product();
     export class UserController{
         public async createReader(req: Request, res: Response){
             try {
-                const queue = uuidv4();
+                //const queue = uuidv4();
                 const {   
                     name,
                     email,
@@ -18,24 +19,46 @@ const productMessage: Product = new Product();
                     birthday,
                     password
                 } = req.body;
-
-                const message: IMessage = {
-                    key: queue,
-                    payload: {
-                        name,
-                        email,
-                        nickname,
-                        birthday,
-                        password,
-                        role: 'READER'
-                    }
-                }
                 
-                const validation = await productMessage.sendMessage('readers', message);
-                if(validation == 0){
-                    res.status(400).json('Email ou nickname ja em uso !');
-                }else
-                    res.status(200).json('Cadastrado com sucesso');
+                let teste = true;
+
+                await banco.query(`SELECT id FROM public."User" 
+                where email = '${email}' or nickname = '${nickname}'`).then(async (res)=>{
+                //console.log(res);
+                if(res.rowCount == 0){
+                    await banco.query(`INSERT INTO public."User"(name, 
+                    email, 
+                    nickname, 
+                    birthday, 
+                    password, 
+                    role, 
+                    activated, 
+                    "createdAt", 
+                    "updatedAt", 
+                    "deletedAt")
+                    VALUES ('${name}', 
+                    '${email}', 
+                    '${nickname}', 
+                    '${birthday}', 
+                    '${password}', 
+                    'READER', 
+                    false, 
+                    '${new Date().toISOString()}', '${new Date().toISOString()}', '1111-11-11');`);
+                    
+                    teste = true;
+                        
+                }else{
+                   teste = false;
+                }
+                });
+
+                
+                if(teste){
+                    return res.status(200).json("criado com sucesso!");
+                }
+                else{
+                    return res.status(400).json("usuario nao autorizado");
+                }
                 
                 } catch (error) {
                         console.log("Error route send message!");
@@ -44,7 +67,7 @@ const productMessage: Product = new Product();
         }
         public async createAuthor(req: Request, res: Response){
             try {
-                const queue = uuidv4();
+                //const queue = uuidv4();
                 const {   
                     name,
                     email,
@@ -52,24 +75,44 @@ const productMessage: Product = new Product();
                     birthday,
                     password
                 } = req.body;
-        
-                const message: IMessage = {
-                        key: queue,
-                        payload: {
-                            name,
-                            email,
-                            nickname,
-                            birthday,
-                            password,
-                            role: 'AUTHOR'
-                        }
-                }
 
-                const validation = await productMessage.sendMessage('authors', message);
-                if(validation == 0){
-                    res.status(400).json('Email ou nickname ja em uso !');
-                }else
-                    res.status(200).json('Cadastrado com sucesso');
+                let teste = true;
+
+                await banco.query(`SELECT id FROM public."User" 
+                where email = '${email}' or nickname = '${nickname}'`).then(async (res)=>{
+                //console.log(res);
+                if(res.rowCount == 0){
+                    await banco.query(`INSERT INTO public."User"(name, 
+                    email, 
+                    nickname, 
+                    birthday, 
+                    password, 
+                    role, 
+                    activated, 
+                    "createdAt", 
+                    "updatedAt", 
+                    "deletedAt")
+                    VALUES ('${name}', 
+                    '${email}', 
+                    '${nickname}', 
+                    '${birthday}', 
+                    '${password}', 
+                    'AUTHOR', 
+                    false, 
+                    '${new Date().toISOString()}', '${new Date().toISOString()}', '1111-11-11');`);
+                
+                   teste = true;
+                }else{
+                    teste = false;
+                }
+                });
+
+                if(teste){
+                    return res.status(200).json("criado com sucesso!");
+                }
+                else{
+                    return res.status(400).json("usuario nao autorizado");
+                }
 
                 } catch (error) {
                         console.log("Error route send message!");
@@ -78,7 +121,7 @@ const productMessage: Product = new Product();
         }
         public async createAdmin(req: Request, res: Response){
             try {
-                const queue = uuidv4();
+                //const queue = uuidv4();
                 const {   
                     name,
                     email,
@@ -86,24 +129,45 @@ const productMessage: Product = new Product();
                     birthday,
                     password
                 } = req.body;
+
+                let teste = true;
         
-                const message: IMessage = {
-                        key: queue,
-                        payload: {
-                            name,
-                            email,
-                            nickname,
-                            birthday,
-                            password,
-                            role: 'ADMINISTRATOR'
-                        }
+                await banco.query(`SELECT id FROM public."User" 
+                where email = '${email}' or nickname = '${nickname}'`).then(async (res)=>{
+                  //console.log(res);
+                  if(res.rowCount == 0){
+                    await banco.query(`INSERT INTO public."User"(name, 
+                      email, 
+                      nickname, 
+                      birthday, 
+                      password, 
+                      role, 
+                      activated, 
+                      "createdAt", 
+                      "updatedAt", 
+                      "deletedAt")
+                      VALUES ('${name}', 
+                      '${email}', 
+                      '${nickname}', 
+                      '${birthday}', 
+                      '${password}', 
+                      'ADMINISTRATOR', 
+                      true, 
+                      '${new Date().toISOString()}', '${new Date().toISOString()}', '1111-11-11');`);
+                  
+                    teste = true;
+
+                  }else{
+                    teste = false;
+                  }
+                });
+
+                if(teste){
+                    return res.status(200).json("criado com sucesso!");
                 }
-        
-                const validation = await productMessage.sendMessage('admin', message);
-                if(validation == 0){
-                    res.status(400).json('Email ou nickname ja em uso !');
-                }else
-                    res.status(200).json('Cadastrado com sucesso');
+                else{
+                    return res.status(400).json("usuario nao autorizado");
+                }
 
             } catch (error) {
                 console.log("Error route send message!");
@@ -112,19 +176,10 @@ const productMessage: Product = new Product();
         }
         public async activateUser(req: Request, res: Response){
             try {
-                const queue = uuidv4();
+                //const queue = uuidv4();
                 const {id} = req.params;
-                const message: IMessage = {
-                    key: queue,
-                    payload: id
-            }
-
-            const validation = await productMessage.sendMessage('activate', message);
-                if(validation == 0){
-                    res.status(400).json('Email ja ativo!');
-                }else
-                    res.status(200).json('Ativado com sucesso');
-
+                await banco.query(`UPDATE public."User" SET activated = true WHERE id = ${id};`);
+                return res.status(200).json("usuario ativado!");
             } catch (error) {
                 console.log("Error route send message!");
                 return res.status(500).json("Error to send message...");
@@ -132,7 +187,7 @@ const productMessage: Product = new Product();
         }
         public async updateUser(req: Request, res: Response){
             try {
-                const queue = uuidv4();
+                //const queue = uuidv4();
                 const {id} = req.params;
 
                 const {   
@@ -140,22 +195,31 @@ const productMessage: Product = new Product();
                     nickname,
                     birthday
                 } = req.body;
-        
-                const message: IMessage = {
-                        key: queue,
-                        payload: {
-                            id,
-                            name,
-                            nickname,
-                            birthday
-                        }
-                }
-    
-                const validation = await productMessage.sendMessage('usersUpdate', message);
-                if(validation == 0){
-                    res.status(400).json('Nickname ja em uso!');
-                }else
-                    res.status(200).json('Atualizado com sucesso');
+
+                let teste = true;
+
+                await banco.query(`SELECT id FROM public."User" where nickname = '${nickname}'`).then(async (res)=>{
+                    //console.log(res);
+                    if(res.rowCount == 0){
+          
+                      await banco.query(`UPDATE public."User"
+                      SET name='${name}', 
+                      nickname='${nickname}', 
+                      birthday='${birthday}',
+                      "updatedAt"='${new Date().toISOString()}'
+                      WHERE id = ${id};`);
+          
+                      teste = true; 
+                    }else{
+                      teste = false;
+                    }});
+
+                    if(teste){
+                        return res.status(200).json("criado com sucesso!");
+                    }
+                    else{
+                        return res.status(400).json("usuario nao autorizado");
+                    }     
 
             } catch (error) {
                 console.log("Error route send message!");
@@ -164,20 +228,27 @@ const productMessage: Product = new Product();
         }
         public async blockUser(req: Request, res: Response){
             try {
-                const queue = uuidv4();
+                //const queue = uuidv4();
                 const {id} = req.params;
-                const message: IMessage = {
-                    key: queue,
-                    payload: id
-            }
+                let teste = true;
+                await banco.query(`select id from "News" where "userId" = ${id} and published = true`).then(async (res)=>{
+                    if(res.rowCount == 0){
+                      await banco.query(`UPDATE public."User" SET activated = false, "deletedAt"='${new Date().toISOString()}' 
+                      WHERE id = ${id};`);
+                        teste = true;
+                    }else{
+                        teste = false;
+                    }
+                });
+                
+                if(teste){
+                    return res.status(200).json("criado com sucesso!");
+                }
+                else{
+                    return res.status(400).json("usuario nao autorizado");
+                }   
 
-            const validation = await productMessage.sendMessage('usersBlock', message);
-            if(validation == 0){
-                res.status(400).json('Este usuario possui publicações, não é possivel excluir!');
-            }else
-                res.status(200).json('Bloqueado com sucesso!');
-
-            } catch (error) {
+            }catch (error) {
                 console.log("Error route send message!");
                 return res.status(500).json("Error to send message...");
             }
@@ -192,7 +263,7 @@ const productMessage: Product = new Product();
                   }
                   
                   
-                  let listNews: IDetails[] = [];
+                let listNews: IDetails[] = [];
 
                 await banco.query(`SELECT 
                 u.id, u.name, u.nickname,
@@ -217,23 +288,28 @@ const productMessage: Product = new Product();
         public async login(req: Request, res: Response){
             try {
             
-            const queue = uuidv4();
+            //const queue = uuidv4();
             const { nickname, password } = req.body;
+            let teste = true;
             //console.log(queue);
-                const message: IMessage = {
-                    key: queue,
-                    payload: {
-                        nickname, 
-                        password
-                    }
-                }   
+            const saltRounds = 8
+            let hashPass = await bcrypt.hash(password, saltRounds);
 
-            const validation = await productMessage.sendMessage('login', message);
-            if(validation == 0){
-                res.status(400).json('login invalido');
-            }else{
-                res.status(200).json('Logado!')
-            }  
+            await banco.query(`select id from "User" where nickname = '${nickname}' and password = '${password}'`).then(async (res)=>{
+                if(res.rowCount != 0){
+                  teste = true;
+                }
+                else{
+                    teste = false;
+                }
+            });
+
+            if(teste){
+                return res.status(200).json("Bem vindo!");
+            }
+            else{
+                return res.status(400).json("Usuario ou senha incorretos!");
+            } 
 
             } catch (error) {
                 console.log("Error route send message!");
