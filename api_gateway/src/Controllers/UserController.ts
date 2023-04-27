@@ -44,7 +44,7 @@ const productMessage: Product = new Product();
                     '${birthday}', 
                     '${hashPass}', 
                     'READER', 
-                    false, 
+                    true, 
                     '${new Date().toISOString()}', '${new Date().toISOString()}', '1111-11-11');`);
                     
                     teste = true;
@@ -102,7 +102,7 @@ const productMessage: Product = new Product();
                     '${birthday}', 
                     '${hashPass}', 
                     'AUTHOR', 
-                    false, 
+                    true, 
                     '${new Date().toISOString()}', '${new Date().toISOString()}', '1111-11-11');`);
                 
                    teste = true;
@@ -297,12 +297,14 @@ const productMessage: Product = new Product();
             //const queue = uuidv4();
             const { nickname, password } = req.body;
             let teste = true;
+            let id = 0;
 
-            await banco.query(`select password from "User" where nickname = '${nickname}'`).then(async (res)=>{
+            await banco.query(`select id, password from "User" where nickname = '${nickname}'`).then(async (res)=>{
                 if(res.rowCount != 0){
                    let desPass = await decrypt(res.rows[0].password);
                    if(password == desPass){
                     teste = true;
+                    id = res.rows[0].id
                    }
                    else{
                     teste = false;
@@ -311,7 +313,7 @@ const productMessage: Product = new Product();
             });
 
             if(teste){
-                return res.status(200).json('Bem vindo!');
+                return res.status(200).json(`${id}`);
             }
             else{
                 return res.status(400).json('Usuario ou senha incorreta');
