@@ -8,7 +8,8 @@ export class DatabaseModel{
     constructor(){
         this._config = {
             user: 'root',
-            host: 'node135344-postgrad-backend.jelastic.saveincloud.net',
+            //host: 'node135344-postgrad-backend.jelastic.saveincloud.net',
+            host: '172.22.169.247',
             database: 'database',
             password: 'root',
             port: 5432,

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { IMessage } from "../product";
 import { Product } from "../product";
-import { getRedis, redisClient } from "../redis";
+//import { getRedis, redisClient } from "../redis";
 import { v4 as uuidv4 } from 'uuid';
 import { DatabaseModel } from '../DatabaseModel';
 const banco = new DatabaseModel().pool;

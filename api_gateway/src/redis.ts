@@ -1,4 +1,4 @@
-import Redis from 'ioredis';
+/*import Redis from 'ioredis';
 import { promisify } from 'util';
 
 //configs
@@ -21,4 +21,4 @@ export function setRedis(key: any, value: any){
     return syncRedisSet(key, value);
 
     //redisClient.set("","")redisClient.del
-}
+}*/

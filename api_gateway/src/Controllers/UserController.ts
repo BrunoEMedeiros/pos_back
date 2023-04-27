@@ -3,7 +3,7 @@ import { IMessage } from "../product";
 import { Product } from "../product";
 import { v4 as uuidv4 } from 'uuid';
 import { DatabaseModel } from '../DatabaseModel';
-import bcrypt from 'bcrypt';
+import { criptografar, decrypt } from "./LoginController";
 const banco = new DatabaseModel().pool;
 
 const productMessage: Product = new Product();
@@ -21,6 +21,8 @@ const productMessage: Product = new Product();
                 } = req.body;
                 
                 let teste = true;
+
+                let hashPass: string = await criptografar(password);
 
                 await banco.query(`SELECT id FROM public."User" 
                 where email = '${email}' or nickname = '${nickname}'`).then(async (res)=>{
@@ -40,7 +42,7 @@ const productMessage: Product = new Product();
                     '${email}', 
                     '${nickname}', 
                     '${birthday}', 
-                    '${password}', 
+                    '${hashPass}', 
                     'READER', 
                     false, 
                     '${new Date().toISOString()}', '${new Date().toISOString()}', '1111-11-11');`);
@@ -78,6 +80,8 @@ const productMessage: Product = new Product();
 
                 let teste = true;
 
+                let hashPass: string = await criptografar(password);
+
                 await banco.query(`SELECT id FROM public."User" 
                 where email = '${email}' or nickname = '${nickname}'`).then(async (res)=>{
                 //console.log(res);
@@ -96,7 +100,7 @@ const productMessage: Product = new Product();
                     '${email}', 
                     '${nickname}', 
                     '${birthday}', 
-                    '${password}', 
+                    '${hashPass}', 
                     'AUTHOR', 
                     false, 
                     '${new Date().toISOString()}', '${new Date().toISOString()}', '1111-11-11');`);
@@ -131,7 +135,9 @@ const productMessage: Product = new Product();
                 } = req.body;
 
                 let teste = true;
-        
+                
+                let hashPass: string = await criptografar(password);
+
                 await banco.query(`SELECT id FROM public."User" 
                 where email = '${email}' or nickname = '${nickname}'`).then(async (res)=>{
                   //console.log(res);
@@ -150,7 +156,7 @@ const productMessage: Product = new Product();
                       '${email}', 
                       '${nickname}', 
                       '${birthday}', 
-                      '${password}', 
+                      '${hashPass}', 
                       'ADMINISTRATOR', 
                       true, 
                       '${new Date().toISOString()}', '${new Date().toISOString()}', '1111-11-11');`);
@@ -291,25 +297,25 @@ const productMessage: Product = new Product();
             //const queue = uuidv4();
             const { nickname, password } = req.body;
             let teste = true;
-            //console.log(queue);
-            const saltRounds = 8
-            let hashPass = await bcrypt.hash(password, saltRounds);
 
-            await banco.query(`select id from "User" where nickname = '${nickname}' and password = '${password}'`).then(async (res)=>{
+            await banco.query(`select password from "User" where nickname = '${nickname}'`).then(async (res)=>{
                 if(res.rowCount != 0){
-                  teste = true;
-                }
-                else{
+                   let desPass = await decrypt(res.rows[0].password);
+                   if(password == desPass){
+                    teste = true;
+                   }
+                   else{
                     teste = false;
+                   }
                 }
             });
 
             if(teste){
-                return res.status(200).json("Bem vindo!");
+                return res.status(200).json('Bem vindo!');
             }
             else{
-                return res.status(400).json("Usuario ou senha incorretos!");
-            } 
+                return res.status(400).json('Usuario ou senha incorreta');
+            }
 
             } catch (error) {
                 console.log("Error route send message!");
