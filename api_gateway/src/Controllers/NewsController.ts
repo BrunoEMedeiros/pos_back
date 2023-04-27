@@ -313,7 +313,7 @@ export class NewsController{
 
             let listNews: INews[] = [];
 
-            await redisClient.del('all_news');
+            //await redisClient.del('all_news');
             await banco.query(`SELECT n.id, n.title, n.subtitle, n.text, n."createdAt", n."updatedAt", n."userId", u."nickname"
             FROM public."News" as n
             inner join "User" as u
