@@ -365,13 +365,15 @@ export class NewsController{
             //const queue = uuidv4();
             const { id } = req.params;  
 
-            await banco.query(`SELECT c."comment" FROM public."News" as n
+            await banco.query(`SELECT c.id, c."comment", c."userID", u.name, u.nickname FROM public."News" as n
             join "Comment" as c
             on c."newId" = n.id
+            join "User" as u
+            on u.id = c."userID"
             where n.id = ${id}`).then((res)=>{
                 objeto.comment = []
                 res.rows.map((comment)=>{
-                  objeto.comment.push(comment.comment);
+                  objeto.comment.push(comment);
                 })
             });
     
