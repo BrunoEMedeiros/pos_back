@@ -70,10 +70,12 @@ export class NewsController{
     
             let teste = true;
 
+            let texto: string = title;
+
             await banco.query(`select id from "User" where role = 'AUTHOR' and activated = true and id =${userId}`).then(async (res)=>{
                 //console.log(res.rowCount);
                 if(res.rowCount == 1){
-                    await banco.query(`UPDATE public."News" SET title='${title}', 
+                    await banco.query(`UPDATE public."News" SET title='${texto}', 
                     subtitle='${subtitle}', text='${content}', 
                     "updatedAt"='${new Date().toISOString()}' 
                     WHERE id = ${id};`);
@@ -92,6 +94,7 @@ export class NewsController{
 
         }catch (error) {
             console.log("Error route send message!");
+            console.log(error)
             return res.status(500).json("Error to send message...");
         }
     }
@@ -288,10 +291,10 @@ export class NewsController{
     public async deleteComment(req: Request, res: Response){
         try {
             //const queue = uuidv4();
-            let teste = true;
+            //let teste = true;
             const{ id } = req.params;
 
-            await banco.query(`UPDATE public."News" SET "published"=true, "deletedAt"='2222-12-22' WHERE id = ${id};`);
+            await banco.query(`delete from "Comment" where id = ${id}`);
             return res.status(200).json("deletado com sucesso!");
             
 
