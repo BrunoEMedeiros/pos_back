@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import { IMessage } from "../product";
 import { Product } from "../product";
 import { v4 as uuidv4 } from 'uuid';
-import { getRedis } from "../redis";
+import { DatabaseModel } from '../DatabaseModel';
+const banco = new DatabaseModel().pool;
 
 const productMessage: Product = new Product();
 
@@ -183,20 +184,30 @@ const productMessage: Product = new Product();
         }
         public async allAuthors(req: Request, res: Response){
             try {
-                const queue = uuidv4();
-            //console.log(queue);
-                const message: IMessage = {
-                    key: queue,
-                    payload: 0
-                }   
+                interface IDetails{
+                    id: number,
+                    name: string,
+                    nickname: string,
+                    quant: number
+                  }
+                  
+                  
+                  let listNews: IDetails[] = [];
 
-            const validation = await productMessage.sendMessage('authorDetails', message);
-            if(validation == 0){
-                res.status(400).json('Erro!');
-            }else{
-                const data: any = await getRedis(queue);
-                return res.status(200).json(JSON.parse(data));
-            }        
+                await banco.query(`SELECT 
+                u.id, u.name, u.nickname,
+                count(n.id) as QUANT
+                FROM "User" as u
+                INNER JOIN "News" as n ON u.id = n."userId"
+                    where n.published = true
+                GROUP BY u.id`).then((res)=>{
+                    listNews = [];
+                    res.rows.map((news)=>{
+                      listNews.push(news);
+                    })
+                }); 
+                
+                return res.status(200).json(listNews);
                 
             } catch (error) {
                 console.log("Error route send message!");
