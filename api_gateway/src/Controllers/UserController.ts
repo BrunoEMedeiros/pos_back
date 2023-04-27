@@ -298,13 +298,15 @@ const productMessage: Product = new Product();
             const { nickname, password } = req.body;
             let teste = true;
             let id = 0;
+            let role = '';
 
-            await banco.query(`select id, password from "User" where nickname = '${nickname}'`).then(async (res)=>{
+            await banco.query(`select id, password, role from "User" where nickname = '${nickname}'`).then(async (res)=>{
                 if(res.rowCount != 0){
                    let desPass = await decrypt(res.rows[0].password);
                    if(password == desPass){
                     teste = true;
                     id = res.rows[0].id
+                    role = res.rows[0].role
                    }
                    else{
                     teste = false;
@@ -313,7 +315,7 @@ const productMessage: Product = new Product();
             });
 
             if(teste){
-                return res.status(200).json(`${id}`);
+                return res.status(200).json({id, role});
             }
             else{
                 return res.status(400).json('Usuario ou senha incorreta');
