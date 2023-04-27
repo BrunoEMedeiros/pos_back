@@ -346,8 +346,7 @@ export class NewsController{
                 nickname: string,
                 comment: string[],
                 like: number,
-                dislike: number,
-                myreaction: string
+                dislike: number
             }
 
             let objeto: INewDetails = {
@@ -361,11 +360,9 @@ export class NewsController{
                 nickname: '',
                 comment: [],
                 like: 0,
-                dislike: 0,
-                myreaction: 'LIKE'
+                dislike: 0
               }
             //const queue = uuidv4();
-            const { userId } = req.body;
             const { id } = req.params;  
 
             await banco.query(`SELECT c."comment" FROM public."News" as n
@@ -380,11 +377,9 @@ export class NewsController{
     
             await banco.query(`select
             (select Count(id) as "LIKE" from "Reaction" where reaction = 'LIKED' and "newId" = ${id}) as Liked,
-            (select Count(id) as "DISLIKE" from "Reaction" where reaction = 'DISLIKED' and "newId" = ${id}) as Disliked,
-            (select reaction from "Reaction" where "userId" = ${userId}) as Myreaction`).then((res)=>{
+            (select Count(id) as "DISLIKE" from "Reaction" where reaction = 'DISLIKED' and "newId" = ${id}) as Disliked`).then((res)=>{
                 objeto.like = res.rows[0].liked,
-                objeto.dislike = res.rows[0].disliked,
-                objeto.myreaction = res.rows[0].myreaction
+                objeto.dislike = res.rows[0].disliked
             });
     
             await banco.query(`SELECT n.id, n.title, n.subtitle, n.text, n."createdAt", n."updatedAt", n."userId", u.name, u.nickname
@@ -503,7 +498,7 @@ export class NewsController{
             });
 
             return res.status(200).json(listNews);
-            
+
         } catch (error) {
             console.log("Error route send message!");
             return res.status(500).json("Error to send message...");
